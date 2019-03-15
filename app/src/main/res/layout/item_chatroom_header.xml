@@ -14,4 +14,4 @@
         android:paddingStart="@dimen/screen_edge_left_and_right_padding"
         android:text="@string/chatroom_header" />
 
- </LinearLayout>
+</LinearLayout>
