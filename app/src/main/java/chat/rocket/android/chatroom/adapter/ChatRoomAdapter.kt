@@ -6,7 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import chat.rocket.android.R
 import chat.rocket.android.chatroom.presentation.ChatRoomNavigator
-import chat.rocket.android.chatroom.uimodel.*
+import chat.rocket.android.chatroom.uimodel.AttachmentUiModel
+import chat.rocket.android.chatroom.uimodel.BaseUiModel
+import chat.rocket.android.chatroom.uimodel.MessageReplyUiModel
+import chat.rocket.android.chatroom.uimodel.MessageUiModel
+import chat.rocket.android.chatroom.uimodel.UrlPreviewUiModel
+import chat.rocket.android.chatroom.uimodel.toViewType
 import chat.rocket.android.emoji.EmojiReactionListener
 import chat.rocket.android.util.extensions.inflate
 import chat.rocket.android.util.extensions.openTabbedUrl
@@ -41,7 +46,11 @@ class ChatRoomAdapter(
                     actionsListener,
                     reactionListener,
                     { userId -> navigator?.toUserDetails(userId) },
-                    { roomId?.let { navigator?.toVideoConferencing(it) } }
+                    {
+                        if (roomId != null && roomType != null) {
+                            navigator?.toVideoConference(roomId, roomType)
+                        }
+                    }
                 )
             }
             BaseUiModel.ViewType.URL_PREVIEW -> {
@@ -98,8 +107,9 @@ class ChatRoomAdapter(
         when (holder) {
             is MessageViewHolder ->
                 holder.bind(dataSet[position] as MessageUiModel)
-            is UrlPreviewViewHolder ->
+            is UrlPreviewViewHolder -> {
                 holder.bind(dataSet[position] as UrlPreviewUiModel)
+            }
             is MessageReplyViewHolder ->
                 holder.bind(dataSet[position] as MessageReplyUiModel)
             is AttachmentViewHolder ->

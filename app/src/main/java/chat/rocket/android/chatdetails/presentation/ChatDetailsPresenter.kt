@@ -36,7 +36,10 @@ class ChatDetailsPresenter @Inject constructor(
                 }
                 view.showFavoriteIcon(!isFavorite)
             } catch (e: RocketChatException) {
-                Timber.e(e, "Error while trying to favorite or removing the favorite of a chat room.")
+                Timber.e(
+                    e,
+                    "Error while trying to favorite or removing the favorite of a chat room."
+                )
                 e.message?.let {
                     view.showMessage(it)
                 }.ifNull {
@@ -46,8 +49,8 @@ class ChatDetailsPresenter @Inject constructor(
         }
     }
 
-    // TODO
-    fun startVideoCall() {}
+    fun toVideoConference(roomId: String, chatRoomType: String) =
+        navigator.toVideoConference(roomId, chatRoomType)
 
     fun getDetails(chatRoomId: String, chatRoomType: String) {
         launchUI(strategy) {
@@ -56,7 +59,7 @@ class ChatDetailsPresenter @Inject constructor(
                     client.getInfo(chatRoomId, null, roomTypeOf(chatRoomType))
                 }
                 view.displayDetails(roomToChatDetails(room))
-            } catch(exception: Exception) {
+            } catch (exception: Exception) {
                 Timber.e(exception)
                 exception.message?.let {
                     view.showMessage(it)
